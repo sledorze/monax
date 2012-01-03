@@ -29,9 +29,7 @@ class OptionM {
 
   inline public static function flatMap<T, U>(x : Option<T>, f : T -> Option<U>) : Option<U> {
     switch (x) {
-      case Some(x) :
-        var xx = f(x);
-        return xx;
+      case Some(x) : return f(x);
       default : return None;
     }
   }
