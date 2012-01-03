@@ -82,11 +82,12 @@ class Monad {
           switch (exp.expr) {
             case EConst(const):
               switch (const) {
-                case CIdent(name):
+                case CIdent(name):            
                   try {
-                    context.typeof(exp);
-                  } catch (e : Dynamic) {
-                    return MCall(name, params);
+                    var candExp = mk(EField(mk(monadRef), name));
+                    context.typeof(candExp);
+                    return MCall(name, params); // valid; we should issue a monad call then. (the test should be cached - and will);
+                  } catch (e : Dynamic) { // not valid
                   }
                 default:
               }
