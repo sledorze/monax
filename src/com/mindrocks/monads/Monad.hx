@@ -1,4 +1,4 @@
-package com.mindrocks.macros;
+package com.mindrocks.monads;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;

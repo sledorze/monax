@@ -1,9 +1,9 @@
-package ;
+package com.mindrocks.monads.instances;
 
 import haxe.macro.Expr;
 import haxe.macro.Context;
 
-import com.mindrocks.macros.Monad;
+import com.mindrocks.monads.Monad;
 
 
 
@@ -21,7 +21,7 @@ import com.mindrocks.macros.Monad;
     Some(x)
   
   inline public static function map < T, U > (x : Option<T>, f : T -> U) : Option<U> {
-    switch (x) {
+    switch x {
       case Some(x) : return Some(f(x));
       default : return None;
     }
@@ -29,9 +29,7 @@ import com.mindrocks.macros.Monad;
 
   inline public static function flatMap<T, U>(x : Option<T>, f : T -> Option<U>) : Option<U> {
     switch (x) {
-      case Some(x) :
-        var xx = f(x);
-        return xx;
+      case Some(x) : return f(x);
       default : return None;
     }
   }
@@ -77,8 +75,7 @@ typedef State<S,T> = S -> {state:S, value:T};
   static public function flatMap <S,T,SU, U>(a:State<S,T>, f: T -> State<S,U>):State<S,U>{
     return function(state){
       var s = a(state);
-      var res = f(s.value)(s.state);
-      return res;
+      return f(s.value)(s.state);
     }
   }
 

@@ -5,8 +5,8 @@ package ;
  * @author sledorze
  */
 
-import Standard;
-using Standard;
+import com.mindrocks.monads.instances.Prelude;
+using com.mindrocks.monads.instances.Prelude;
 
 import massive.munit.Assert;
 // import com.mindrocks.macros.Monad; // just for imorting an definition Option
