@@ -1,6 +1,5 @@
 import massive.munit.TestSuite;
 
-import ExampleTest;
 import MonadTest;
 
 /**
@@ -14,8 +13,7 @@ class TestSuite extends massive.munit.TestSuite
 	public function new()
 	{
 		super();
-
-		add(ExampleTest);
+    
 		add(MonadTest);
 	}
 }
