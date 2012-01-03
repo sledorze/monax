@@ -67,14 +67,38 @@ class Monad {
   }
   #end
 
+  static var validNames : Hash<Bool> = new Hash<Bool>();
+  
   public static function dO(monadTypeName : String, body : Expr, context : Dynamic, optimize : MonadOp -> Position -> MonadOp = null) {
     #if macro
     if (optimize == null)
       optimize = genOptimize;
-    
+      
+      
     var monadRef = EConst(CType(monadTypeName));
     var position : Position = context.currentPos();
     function mk(e : ExprDef) return { pos : position, expr : e };
+
+    // We do not rely on the Monad definition because we want to be open to 'using' based extensions
+    function isAValidName(name : String) {
+      var completeName = monadRef + name;
+      var res = validNames.get(completeName);
+      if (res == null) {
+        validNames.set(
+          completeName,
+          try {
+            context.typeof(mk(EField(mk(monadRef), name)));
+            true;
+          } catch (e : Dynamic) {
+            false;
+          }
+        );
+        return isAValidName(name);
+      } else {
+        return res;
+      }
+    }
+    
 
     function tryPromoteExpression(e : Expr) : MonadOp {
       switch (e.expr) {        
@@ -82,12 +106,9 @@ class Monad {
           switch (exp.expr) {
             case EConst(const):
               switch (const) {
-                case CIdent(name):            
-                  try {
-                    var candExp = mk(EField(mk(monadRef), name));
-                    context.typeof(candExp);
-                    return MCall(name, params); // valid; we should issue a monad call then. (the test should be cached - and will);
-                  } catch (e : Dynamic) { // not valid
+                case CIdent(name):          
+                  if (isAValidName(name)) {
+                    return MCall(name, params); // valid; we should issue a monad call then.                    
                   }
                 default:
               }
