@@ -1,1 +1,67 @@
-         
+h1. Monax macro library.
+
+This library, built on top of haXe macros give the user the possibility to define specific Monad instance and get automatically access to a haskell like sugared syntax.
+About monad: http://en.wikipedia.org/wiki/Monad_(functional_programming)
+
+The syntactic sugar rely on the existence 'ret' and 'flatMap' in the Monad instance.
+It also requiers the existence of 'map' to provide automatic optimisations.
+
+
+h2. Learn the (not so) hard way - Defining a Monad instance.
+
+<pre>
+<code>
+
+class OptionM {
+    
+  @:macro public static function dO(body : Expr) return // the function to trigger the Monad macro.
+    Monad.dO("OptionM", body, Context)
+
+  inline public static function ret<T>(x : T) return // creates an element
+    Some(x)
+  
+  inline public static function map < T, U > (x : Option<T>, f : T -> U) : Option<U> {
+    switch (x) {
+      case Some(x) : return Some(f(x));
+      default : return None;
+    }
+  }
+
+  inline public static function flatMap<T, U>(x : Option<T>, f : T -> Option<U>) : Option<U> {
+    switch (x) {
+      case Some(x) :
+        var xx = f(x);
+        return xx;
+      default : return None;
+    }
+  }
+}
+
+</code>
+</pre>
+
+h2. Using a Monad instance (Option here).
+
+<pre>
+<code>
+        OptionM.dO({
+          value <= ret(55);
+          value1 <= ret(value * 2);
+          ret(value1 + value);
+        });
+</code>
+</pre>
+
+Due to optimisations; this code reduce to Some(165), those optimisations are applied by default.
+One can define his own optimisations (feeding the Monad.dO method its last parameter)
+
+  @:macro public static function dO(body : Expr) return
+    Monad.dO("OptionM", body, Context, myCustomTransformation)
+
+(please refer to the default function code to make sense of how to make optimization - macro knowledge requiered).
+
+or using no optimisation at all:
+
+  @:macro public static function dO(body : Expr) return
+    Monad.dO("OptionM", body, Context, Monad.noOpt)
+
