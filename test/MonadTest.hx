@@ -17,34 +17,6 @@ enum Option<T> {
 }
 
 
-class Obj {
-  var name : String;
-  public function new(name : String) {    
-    this.name = name;
-  }
-}
-
-class Collection {
-  var objs : Array<Obj>;
-  public function new() { 
-    objs = [new Obj("a"), new Obj("b")];
-  }
-  public function all(name : String, cb : Error -> Array<Obj> -> Void) {    
-    // cb("Aieeeuu!!", null);
-    cb(null, objs);
-  }
-}
-
-class DB {
-  var coll : Collection;
-  public function new() {
-    coll = new Collection();
-  }
-  public function collection(name : String, cb : Error -> Collection -> Void) {
-    cb(null, coll);
-  }
-}
-
 class MonadTest {
 
   public function new() {
@@ -107,18 +79,6 @@ class MonadTest {
       })(function(x) return x);
       
     Assert.areEqual(res4, "52\ndummy-content");
-    
-    
-    var db = new DB();    
-    var res5 : String = "";
-    
-    NodeM.dO({
-      coll <= db.collection("avatars", _);
-      avatars <= coll.all("", _);
-      ret(avatars.length);
-    })(function (err, res) res5 = ("res " + err + " | " + res));
-      
-    Assert.areEqual(res5, "res null | 2");
     
   }
 }

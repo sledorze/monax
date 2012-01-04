@@ -1,6 +1,7 @@
 import massive.munit.TestSuite;
 
 import MonadTest;
+import NodeJsMonadTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -15,5 +16,6 @@ class TestSuite extends massive.munit.TestSuite
 		super();
 
 		add(MonadTest);
+		add(NodeJsMonadTest);
 	}
 }
