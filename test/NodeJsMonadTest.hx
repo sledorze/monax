@@ -9,6 +9,9 @@ import com.mindrocks.monads.Monad;
 import com.mindrocks.monads.instances.NodeJs;
 using com.mindrocks.monads.instances.NodeJs;
 
+import com.mindrocks.monads.instances.Prelude;
+using com.mindrocks.monads.instances.Prelude;
+
 import massive.munit.Assert;
 
 class NodeJsMonadTest {
@@ -20,9 +23,21 @@ class NodeJsMonadTest {
   public function compilationTest() {
     
     var db = new DB();    
+
+    try {
+      var res =
+        Monad.dO({
+          v <= OptionM.ret(10);
+          ret(v);
+        });
+      trace("Monad " + res );
+    } catch (e : Dynamic) {
+      trace("pouet");
+    }
     
     var getLength =
       NodeM.dO({
+//      Monad.adO({
         coll <= db.collection("avatars", _.either());
         avatars <=
           switch (coll) {

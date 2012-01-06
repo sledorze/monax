@@ -8,13 +8,11 @@ package ;
 import com.mindrocks.monads.instances.Prelude;
 using com.mindrocks.monads.instances.Prelude;
 
+import com.mindrocks.monads.Monad;
+using com.mindrocks.monads.Monad;
+
 import massive.munit.Assert;
 // import com.mindrocks.macros.Monad; // just for imorting an definition Option
-
-enum Option<T> {
-  None;
-  Some(x: T);
-}
 
 
 class MonadTest {
@@ -26,11 +24,29 @@ class MonadTest {
   public function compilationTest() {
     
     var res =
-      OptionM.dO({
-        value <= ret(55);
+      Monad.dO({
+        value <= Some(55);
         value1 <= ret(value * 2);
         ret(value1 + value);
       });
+    
+      Monad.dO({
+        v <= Some([10, 20]);        
+        w <= ret(Monad.dO({
+          x <= v;
+          ret(x + 2);
+        }));
+        ret(w);
+      });      
+      
+    /*  
+    Monad.adO({
+        value <= Some(55);
+        value1 <= ret(value * 2);
+        ret(value1 + value);
+      });
+  */
+      
   
     Assert.isTrue(
       switch (res) {
@@ -38,9 +54,9 @@ class MonadTest {
         case Some(x): x == 165;
       }
     );
-      
+   
     var res2 = 
-      ArrayM.dO({
+      Monad.dO({
         a <= [0, 1, 2];
         b <= [10, 20, 30];
         c <= ret(1000);
@@ -55,10 +71,10 @@ class MonadTest {
       }
     }
     Assert.isTrue(equals);
-    
+
     var res3 =
-      StateM.dO({
-        passedState <= gets();
+      Monad.dO({
+        passedState <= StateM.gets();
         puts("2");
         state <= gets();
         ret('passed state: '+passedState+' new state: '+state);
@@ -72,8 +88,8 @@ class MonadTest {
     }
     
     var res4 =
-      ContM.dO({
-        headline <= ret(52);
+      Monad.dO({
+        headline <= ContM.ret(52);
         filecontents <= dummyReadFile;
         ret(Std.string(headline) + "\n" + filecontents);
       })(function(x) return x);

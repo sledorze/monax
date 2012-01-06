@@ -13,22 +13,22 @@ import com.mindrocks.monads.Monad;
  */
  
 @:native("Option_Monad") class OptionM {
-    
-  @:macro public static function dO(body : Expr) return
-    Monad.dO("OptionM", body, Context)
-
+  
+  public static function monad<T>(o : Option<T>)
+    return OptionM
+  
   inline public static function ret<T>(x : T) return
     Some(x)
   
-  inline public static function map < T, U > (x : Option<T>, f : T -> U) : Option<U> {
-    switch x {
+  inline public static function map < T, U > (o : Option<T>, f : T -> U) : Option<U> {
+    switch (o) {
       case Some(x) : return Some(f(x));
       default : return None;
     }
   }
 
-  inline public static function flatMap<T, U>(x : Option<T>, f : T -> Option<U>) : Option<U> {
-    switch (x) {
+  inline public static function flatMap<T, U>(o : Option<T>, f : T -> Option<U>) : Option<U> {
+    switch (o) {
       case Some(x) : return f(x);
       default : return None;
     }
@@ -36,8 +36,12 @@ import com.mindrocks.monads.Monad;
 }
 
 @:native("Array_Monad") class ArrayM {
+
   @:macro public static function dO(body : Expr) return
-  Monad.dO("ArrayM", body, Context)
+    Monad._dO("ArrayM", body, Context)
+
+  public static function monad<T>(o : Array<T>)
+    return ArrayM
 
   inline public static function ret<T>(x : T) return
     [x]
@@ -65,8 +69,11 @@ typedef State<S,T> = S -> {state:S, value:T};
 
 @:native("ST_Monad") class StateM {
 
+  public static function monad<S,T>(o : State<S,T>)
+    return StateM
+
   @:macro public static function dO(body : Expr) return
-    Monad.dO("StateM", body, Context, Monad.noOpt)
+    Monad._dO("StateM", body, Context, Monad.noOpt)
 
   static public function ret <S,T>(i:T):State<S,T> {
     return function(s:S){ return {state:s, value:i}; };
@@ -108,8 +115,11 @@ typedef RC<R,A> = (A -> R) -> R
 
 @:native("Cont_Monad") class ContM {
 
+  public static function monad<T,U>(o : RC<T,U>)
+    return ContM
+
   @:macro public static function dO(body : Expr) return
-    Monad.dO("ContM", body, Context)
+    Monad._dO("ContM", body, Context)
 
   static public function ret <A,R>(i:A):RC<R,A>
     return function(cont) return cont(i)

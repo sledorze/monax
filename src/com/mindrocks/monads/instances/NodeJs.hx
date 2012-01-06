@@ -41,6 +41,8 @@ class Foo {
 
 @:native("NodeM") class NodeM {
 
+  public static function monad<R, A>(o : NodeC<R,A>) return NodeM
+
           
   public static function specialOpt(m : MonadOp, position : Position) : MonadOp {
     #if macro
@@ -86,9 +88,9 @@ class Foo {
   }
   
   @:macro public static function dO(body : Expr) return
-    Monad.dO("NodeM", body, Context, specialOpt)
+    Monad._dO("NodeM", body, Context, specialOpt)
 
-  inline static public function ret <A,R>(i:A):NodeC<R,A>
+  static public function ret <A,R>(i:A):NodeC<R,A>
     return function(cont) return cont(null, i)
 /*
   inline public static singleParam<T>(f : T -> Void) : Error -> T -> Void {
