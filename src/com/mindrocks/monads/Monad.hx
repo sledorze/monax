@@ -41,7 +41,7 @@ class Monad {
       case MFlatMap(e, bindName, body):
         var body = genOptimize(body, position);
         var e = genOptimize(e, position);
-        
+           
         switch (e) {
           case MCall(name, params):
             switch (name) {

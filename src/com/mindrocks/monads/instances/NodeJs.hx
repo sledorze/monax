@@ -8,9 +8,36 @@ import com.mindrocks.monads.Monad;
  * ...
  * @author sledorze
  */
-
+enum Either < A, B > {
+  Left(a : A);
+  Right(b : B);
+}
+ 
 typedef Error = Dynamic
 typedef NodeC<R,A> = (Error -> A -> R) -> R
+
+class Foo {
+  
+  public static function either<T>(f : Error -> Either < Error, T > -> Void) : Error -> T -> Void {
+    return function (err, v) {
+      if (err == null) {
+        f(null, Right(v));
+      } else {
+        f(null, Left(err));
+      }
+    }
+  }
+  
+  inline public static function success<T>(f : Error -> T -> Void) : Error -> T -> Void
+    return f
+
+  public static function error<T>(f : Error -> T -> Void) : Error -> Error -> Void
+    return function (err, v) f(null, err)
+  
+  public static function one<T>(f : Error -> T -> Void) : T -> Void {
+    return function (v) f(null, v);
+  }
+}
 
 @:native("NodeM") class NodeM {
 
@@ -35,10 +62,11 @@ typedef NodeC<R,A> = (Error -> A -> R) -> R
               ret : null,
               expr : mk(EReturn(e)),
               params : []
-            };            
+            };   
             MExp(mk(EFunction(null, func)));
           default: e;
         };
+      
       return f(newE, name, body);
     }
     
@@ -62,16 +90,20 @@ typedef NodeC<R,A> = (Error -> A -> R) -> R
 
   inline static public function ret <A,R>(i:A):NodeC<R,A>
     return function(cont) return cont(null, i)
-
+/*
+  inline public static singleParam<T>(f : T -> Void) : Error -> T -> Void {
+    return function (
+  }
+  */
+  
   static public function flatMap <A, B, R>(m:NodeC<R,A>, k: A -> NodeC<R,B>): NodeC<R,B>
-    return function(cont : Error -> B -> R) {
+    return function(cont : Error -> B -> R)
       return m(function(err, a) {
         if (err != null)
           return cont(err, null);
         else
           return k(a)(cont);
-      });
-    }
+      })
 
   static public function map <A, B, R>(m:NodeC<R,A>, k: A -> B): NodeC<R,B>
     return function(cont : Error -> B -> R)

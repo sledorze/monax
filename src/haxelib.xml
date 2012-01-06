@@ -3,5 +3,5 @@
     <tag v="cross"/>
     <tag v="utility"/>
     <description>Monax provide a macro to create optimizing Monads and their syntactic sugar</description>
-    <version name="1.0">Initial release, everything is working correctly</version>
+    <version name="1.1">Added some monad instances (Option, Array, State, Continuation and NodeJs)</version>
 </project>
