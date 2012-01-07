@@ -14,6 +14,9 @@ import com.mindrocks.monads.Monad;
  
 @:native("Option_Monad") class OptionM {
   
+  @:macro public static function dO(body : Expr) return
+    Monad._dO("OptionM", body, Context)
+    
   public static function monad<T>(o : Option<T>)
     return OptionM
   

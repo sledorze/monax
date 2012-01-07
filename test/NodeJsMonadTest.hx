@@ -24,17 +24,6 @@ class NodeJsMonadTest {
     
     var db = new DB();    
 
-    try {
-      var res =
-        Monad.dO({
-          v <= OptionM.ret(10);
-          ret(v);
-        });
-      trace("Monad " + res );
-    } catch (e : Dynamic) {
-      trace("pouet");
-    }
-    
     var getLength =
       NodeM.dO({
 //      Monad.adO({
@@ -51,7 +40,7 @@ class NodeJsMonadTest {
     
     getLength(function (err, res) Assert.areEqual(2, res));
     getLength(function (err, res) Assert.areEqual(2, res));
-    Assert.areEqual(3, DB.nbCalls);
+    Assert.areEqual(2, DB.nbCalls);
 
   }
   

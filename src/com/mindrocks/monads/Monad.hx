@@ -2,7 +2,7 @@ package com.mindrocks.monads;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
-import haxe.macro.Type;
+// import haxe.macro.Type;
 
 /**
  * ...
@@ -67,12 +67,9 @@ class Monad {
     }
   }
   #end
-
-  static var validNames : Hash<Bool> = new Hash<Bool>();
   
   @:macro public static function dO(exp : Expr) {
     function mk(e : ExprDef) return { pos : Context.currentPos(), expr : e };
-    trace("exp " + exp);
     switch (exp.expr) {
       case EBlock(exprs):
         switch (exprs[0].expr) {
@@ -81,10 +78,9 @@ class Monad {
 
               var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
               var monadType = Context.typeof(retrieveMonad);
-              var monadName = (Std.string(monadType)).split("#")[1].split(",")[0]; // experimental, uhuh
-              trace("BB " + monadName);
-              
-              return _dO(monadName, exp, Context, null); // Monad.noOpt);              
+              var monadName = (Std.string(monadType)).split("#")[1].split(",")[0]; // not very 
+ 
+              return mk(ECall(mk(EField(mk(EConst(CType(monadName))), "dO")), [exp]));
             }
           default:
         }
@@ -93,12 +89,10 @@ class Monad {
     }
     return exp;
   }
-/*
-  public static function dO2(body : Expr, context : Dynamic, opt : { name : String, opt : MonadOp -> Position -> MonadOp } ) {
-    return dO(opt.name, body, context, opt.opt);
-  }
-*/
-  public static function _dO(monadTypeName : String, body : Expr, context : Dynamic, optimize : MonadOp -> Position -> MonadOp = null) {
+
+  static var validNames : Hash<Bool> = new Hash<Bool>();
+
+  public static function _dO(monadTypeName : String, body : Expr, context : Dynamic, optimize : MonadOp -> Position -> MonadOp = null) {    
     #if macro
     if (optimize == null)
       optimize = genOptimize;

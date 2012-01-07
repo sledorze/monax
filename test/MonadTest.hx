@@ -30,6 +30,7 @@ class MonadTest {
         ret(value1 + value);
       });
     
+    var nested =
       Monad.dO({
         v <= Some([10, 20]);        
         w <= ret(Monad.dO({
@@ -37,17 +38,10 @@ class MonadTest {
           ret(x + 2);
         }));
         ret(w);
-      });      
-      
-    /*  
-    Monad.adO({
-        value <= Some(55);
-        value1 <= ret(value * 2);
-        ret(value1 + value);
       });
-  */
       
-  
+      trace("Nested " + nested);
+      
     Assert.isTrue(
       switch (res) {
         case None: false;
