@@ -75,11 +75,12 @@ class Monad {
         switch (exprs[0].expr) {
           case EBinop(op, e1, e2):
             if (op == OpLte) {
-
+              
               var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
               var monadType = Context.typeof(retrieveMonad);
               var monadName = (Std.string(monadType)).split("#")[1].split(",")[0]; // not very 
- 
+              
+              
               return mk(ECall(mk(EField(mk(EConst(CType(monadName))), "dO")), [exp]));
             }
           default:
@@ -124,7 +125,15 @@ class Monad {
     
 
     function tryPromoteExpression(e : Expr) : MonadOp {
-      switch (e.expr) {        
+      switch (e.expr) {
+        case EReturn(exp) :
+          switch(exp.expr) {
+            case EBlock(arr):
+              return MCall("ret", [mk(ECall(mk(EField(mk(EConst(CType("Monad"))), "dO")), [exp]))]); 
+            default:
+              return MCall("ret", [exp]);
+          }          
+          
         case ECall(exp, params) :
           switch (exp.expr) {
             case EConst(const):

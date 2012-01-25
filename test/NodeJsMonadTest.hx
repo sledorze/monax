@@ -33,7 +33,7 @@ class NodeJsMonadTest {
             case Left(err) : null; // but it has to really handle it explicitely! (not like this)
           }        
         size <= avatars[0].size(_.single());
-        ret(size);
+        return size;
       });
       
     var getLength =
@@ -41,7 +41,7 @@ class NodeJsMonadTest {
         coll <= db.collection("avatars", _);
         avatars <= coll.all("", _);
         size <= avatars[0].size(_.single()); // single parameter cb (no possible error)
-        ret(size);
+        return size;
       });
     
     getLength(function (err, res) Assert.areEqual(2, res));

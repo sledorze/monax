@@ -19,6 +19,11 @@ class MonadTest {
 
   public function new() {
   }
+  
+  public static function main() {
+    new MonadTest().compilationTest();
+    new NodeJsMonadTest().compilationTest();
+  }
 
   @Test
   public function compilationTest() {
@@ -26,18 +31,18 @@ class MonadTest {
     var res =
       Monad.dO({
         value <= Some(55);
-        value1 <= ret(value * 2);
-        ret(value1 + value);
+        value1 <= return value * 2;
+        return value1 + value;
       });
     
     var nested =
       Monad.dO({
         v <= Some([10, 20]);        
-        w <= ret(Monad.dO({
+        w <= return {
           x <= v;
-          ret(x + 2);
-        }));
-        ret(w);
+          return x + 2;
+        };
+        return w;
       });
       
       trace("Nested " + nested);
@@ -53,7 +58,7 @@ class MonadTest {
       Monad.dO({
         a <= [0, 1, 2];
         b <= [10, 20, 30];
-        c <= ret(1000);
+        c <= return 1000;
         [a + b + c];
       });
 
@@ -71,7 +76,7 @@ class MonadTest {
         passedState <= StateM.gets();
         puts("2");
         state <= gets();
-        ret('passed state: '+passedState+' new state: '+state);
+        return 'passed state: '+passedState+' new state: '+state;
       }).runState("1");
 
     Assert.areEqual(res3, "passed state: 1 new state: 2");
@@ -82,10 +87,10 @@ class MonadTest {
     }
     
     var res4 =
-      Monad.dO({
-        headline <= ContM.ret(52);
+      ContM.dO({
+        headline <= return 52;
         filecontents <= dummyReadFile;
-        ret(Std.string(headline) + "\n" + filecontents);
+        return Std.string(headline) + "\n" + filecontents;
       })(function(x) return x);
       
     Assert.areEqual(res4, "52\ndummy-content");
