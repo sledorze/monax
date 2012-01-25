@@ -3,5 +3,5 @@
     <tag v="cross"/>
     <tag v="utility"/>
     <description>Monax provide a macro to create optimizing Monads and their syntactic sugar</description>
-    <version name="1.2">Can now use monads without explicitely specifying the Monad type</version>
+    <version name="1.3">Added more lightweight syntactic sugar (return instad of ret and blocks)</version>
 </project>
