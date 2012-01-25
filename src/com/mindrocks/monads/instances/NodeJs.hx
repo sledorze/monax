@@ -16,8 +16,9 @@ enum Either < A, B > {
 typedef Error = Dynamic
 typedef NodeC<R,A> = (Error -> A -> R) -> R
 
-class Foo {
-  
+class NodeJsEitherCB {
+    
+  // Lift Value or Error into the Either Monad
   public static function either<T>(f : Error -> Either < Error, T > -> Void) : Error -> T -> Void {
     return function (err, v) {
       if (err == null) {
@@ -28,13 +29,15 @@ class Foo {
     }
   }
   
+/*
   inline public static function success<T>(f : Error -> T -> Void) : Error -> T -> Void
     return f
 
   public static function error<T>(f : Error -> T -> Void) : Error -> Error -> Void
     return function (err, v) f(null, err)
-  
-  public static function one<T>(f : Error -> T -> Void) : T -> Void {
+*/
+    
+  public static function single<T>(f : Error -> T -> Void) : T -> Void {
     return function (v) f(null, v);
   }
 }

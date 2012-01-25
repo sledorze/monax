@@ -22,20 +22,26 @@ class NodeJsMonadTest {
   @Test
   public function compilationTest() {
     
-    var db = new DB();    
-
-    var getLength =
+    var db = new DB();
+    
+    var getLengthViaEither =
       NodeM.dO({
-//      Monad.adO({
-        coll <= db.collection("avatars", _.either());
-        avatars <=
+        coll <= db.collection("avatars", _.either()); // If one wants to handle errors explicitely he can use 'either' construct
+        avatars <= 
           switch (coll) {
             case Right(coll): coll.all("", _);
-            case Left(err) : null; // broken...
-          }
-        size <= avatars[0].size(_.one());
-//        size <= (function (cb) avatars[0].size(function (v) cb(null, v)))(_);
-        ret(size); // avatars.length);
+            case Left(err) : null; // but it has to really handle it explicitely! (not like this)
+          }        
+        size <= avatars[0].size(_.single());
+        ret(size);
+      });
+      
+    var getLength =
+      NodeM.dO({
+        coll <= db.collection("avatars", _);
+        avatars <= coll.all("", _);
+        size <= avatars[0].size(_.single()); // single parameter cb (no possible error)
+        ret(size);
       });
     
     getLength(function (err, res) Assert.areEqual(2, res));
