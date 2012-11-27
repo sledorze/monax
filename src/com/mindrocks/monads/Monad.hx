@@ -69,6 +69,7 @@ class Monad {
   #end
   
   @:macro public static function dO(exp : Expr) {
+  #if macro
     function mk(e : ExprDef) return { pos : Context.currentPos(), expr : e };
     switch (exp.expr) {
       case EBlock(exprs):
@@ -88,7 +89,8 @@ class Monad {
         
       default:
     }
-    return exp;
+  #end
+    return exp;    
   }
 
   static var validNames : Hash<Bool> = new Hash<Bool>();
