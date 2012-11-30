@@ -82,7 +82,7 @@ class Monad {
               var monadName = (Std.string(monadType)).split("#")[1].split(",")[0]; // not very 
               
               
-              return mk(ECall(mk(EField(mk(EConst(CType(monadName))), "dO")), [exp]));
+              return mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end(monadName))), "dO")), [exp]));
             }
           default:
         }
@@ -101,7 +101,7 @@ class Monad {
       optimize = genOptimize;
       
       
-    var monadRef = EConst(CType(monadTypeName));
+    var monadRef = EConst(#if haxe3 CIdent #else CType #end(monadTypeName));
     var position : Position = context.currentPos();
     function mk(e : ExprDef) return { pos : position, expr : e };
 
@@ -131,7 +131,7 @@ class Monad {
         case EReturn(exp) :
           switch(exp.expr) {
             case EBlock(arr):
-              return MCall("ret", [mk(ECall(mk(EField(mk(EConst(CType("Monad"))), "dO")), [exp]))]); 
+              return MCall("ret", [mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end("Monad"))), "dO")), [exp]))]); 
             default:
               return MCall("ret", [exp]);
           }          
