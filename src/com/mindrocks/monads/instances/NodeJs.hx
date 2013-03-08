@@ -44,7 +44,7 @@ class NodeJsEitherCB {
 
 @:native("NodeM") class NodeM {
 
-  public static function monad<R, A>(o : NodeC<R,A>) return NodeM
+  public static function monad<R, A>(o : NodeC<R,A>) return NodeM;
 
           
   public static function specialOpt(m : MonadOp, position : Position) : MonadOp {
@@ -90,11 +90,11 @@ class NodeJsEitherCB {
     #end
   }
   
-  @:macro public static function dO(body : Expr) return
-    Monad._dO("NodeM", body, Context, specialOpt)
+  macro public static function dO(body : Expr) return
+    Monad._dO("NodeM", body, Context, specialOpt);
 
   static public function ret <A,R>(i:A):NodeC<R,A>
-    return function(cont) return cont(null, i)
+    return function(cont) return cont(null, i);
 /*
   inline public static singleParam<T>(f : T -> Void) : Error -> T -> Void {
     return function (
@@ -108,7 +108,7 @@ class NodeJsEitherCB {
           return cont(err, null);
         else
           return k(a)(cont);
-      })
+      });
 
   static public function map <A, B, R>(m:NodeC<R,A>, k: A -> B): NodeC<R,B>
     return function(cont : Error -> B -> R)
@@ -117,6 +117,6 @@ class NodeJsEitherCB {
           return cont(err, null);
         else
           return cont(null, k(a));
-      })
+      });
 }
 

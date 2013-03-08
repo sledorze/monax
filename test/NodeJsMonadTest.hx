@@ -30,7 +30,7 @@ class NodeJsMonadTest {
         avatars <= 
           switch (coll) {
             case Right(coll): coll.all("", _);
-            case Left(err) : null; // but it has to really handle it explicitely! (not like this)
+            case Left(_) : null; // but it has to really handle it explicitely! (not like this)
           }        
         size <= avatars[0].size(_.single());
         return size;

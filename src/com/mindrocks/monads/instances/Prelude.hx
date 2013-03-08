@@ -14,14 +14,14 @@ import com.mindrocks.monads.Monad;
  
 @:native("Option_Monad") class OptionM {
   
-  @:macro public static function dO(body : Expr) return
-    Monad._dO("OptionM", body, Context)
+  macro public static function dO(body : Expr) return
+    Monad._dO("OptionM", body, Context);
     
   public static function monad<T>(o : Option<T>)
-    return OptionM
+    return OptionM;
   
   inline public static function ret<T>(x : T) return
-    Some(x)
+    Some(x);
   
   inline public static function map < T, U > (o : Option<T>, f : T -> U) : Option<U> {
     switch (o) {
@@ -40,14 +40,14 @@ import com.mindrocks.monads.Monad;
 
 @:native("Array_Monad") class ArrayM {
 
-  @:macro public static function dO(body : Expr) return
-    Monad._dO("ArrayM", body, Context)
+  macro public static function dO(body : Expr) return
+    Monad._dO("ArrayM", body, Context);
 
   public static function monad<T>(o : Array<T>)
-    return ArrayM
+    return ArrayM;
 
   inline public static function ret<T>(x : T) return
-    [x]
+    [x];
   
   inline public static function flatMap<T, U>(xs : Array<T>, f : T -> Array<U>) : Array<U> {
     var res = [];
@@ -73,10 +73,10 @@ typedef State<S,T> = S -> {state:S, value:T};
 @:native("ST_Monad") class StateM {
 
   public static function monad<S,T>(o : State<S,T>)
-    return StateM
+    return StateM;
 
-  @:macro public static function dO(body : Expr) return
-    Monad._dO("StateM", body, Context, Monad.noOpt)
+  macro public static function dO(body : Expr) return
+    Monad._dO("StateM", body, Context, Monad.noOpt);
 
   static public function ret <S,T>(i:T):State<S,T> {
     return function(s:S){ return {state:s, value:i}; };
@@ -119,20 +119,20 @@ typedef RC<R,A> = (A -> R) -> R
 @:native("Cont_Monad") class ContM {
 
   public static function monad<T,U>(o : RC<T,U>)
-    return ContM
+    return ContM;
 
-  @:macro public static function dO(body : Expr) return
-    Monad._dO("ContM", body, Context)
+  macro public static function dO(body : Expr) return
+    Monad._dO("ContM", body, Context);
 
   static public function ret <A,R>(i:A):RC<R,A>
-    return function(cont) return cont(i)
+    return function(cont) return cont(i);
 
   static public function flatMap <A, B, R>(m:RC<R,A>, k: A -> RC<R,B>): RC<R,B>
     return function(cont : B -> R)
-      return m(function(a) return k(a)(cont))
+      return m(function(a) return k(a)(cont));
 
   static public function map <A, B, R>(m:RC<R,A>, k: A -> B): RC<R,B>
     return function(cont : B -> R)
-      return m(function (a) return cont(k(a)))
+      return m(function (a) return cont(k(a)));
 }
 

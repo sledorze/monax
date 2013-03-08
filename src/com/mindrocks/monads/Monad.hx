@@ -74,7 +74,7 @@ class Monad {
     switch (exp.expr) {
       case EBlock(exprs):
         switch (exprs[0].expr) {
-          case EBinop(op, e1, e2):
+          case EBinop(op, _, e2):
             if (op == OpLte) {
               
               var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
@@ -130,7 +130,7 @@ class Monad {
       switch (e.expr) {
         case EReturn(exp) :
           switch(exp.expr) {
-            case EBlock(arr):
+            case EBlock(_):
               return MCall("ret", [mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end("Monad"))), "dO")), [exp]))]); 
             default:
               return MCall("ret", [exp]);
