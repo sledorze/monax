@@ -34,7 +34,7 @@ enum Option<T> {
 class Monad {
   
   public static function noOpt(m : MonadOp, position : Position) : MonadOp
-    return m
+    return m;
   #if macro
   public static function genOptimize(m : MonadOp, position : Position) : MonadOp {
     function mk(e : ExprDef) return { pos : position, expr : e };
@@ -68,7 +68,7 @@ class Monad {
   }
   #end
   
-  @:macro public static function dO(exp : Expr) {
+  macro public static function dO(exp : Expr) {
   #if macro
     function mk(e : ExprDef) return { pos : Context.currentPos(), expr : e };
     switch (exp.expr) {
@@ -93,7 +93,7 @@ class Monad {
     return exp;    
   }
 
-  static var validNames : Hash<Bool> = new Hash<Bool>();
+  static var validNames : Map<String,Bool> = new Map<String,Bool>();
 
   public static function _dO(monadTypeName : String, body : Expr, context : Dynamic, optimize : MonadOp -> Position -> MonadOp = null) {    
     #if macro
