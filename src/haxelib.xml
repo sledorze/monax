@@ -1,7 +1,0 @@
-<project name="monax" url="https://github.com/sledorze/monax" license="BSD">
-    <user name="sledorze"/>
-    <tag v="cross"/>
-    <tag v="utility"/>
-    <description>Monax provide a macro to create optimizing Monads and their syntactic sugar</description>
-    <version name="1.4">Cope with Haxe changes</version>
-</project>
