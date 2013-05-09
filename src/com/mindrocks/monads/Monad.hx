@@ -101,7 +101,15 @@ class Monad {
       optimize = genOptimize;
       
       
-    var monadRef = EConst(#if haxe3 CIdent #else CType #end(monadTypeName));
+    var monadRef = 
+      #if haxe3
+      Lambda.fold(monadTypeName.split("."), function(a, b) {
+        return b != null ? {expr:EField(b, a), pos:b.pos} : macro $i{a};
+      }, null).expr;
+      #else
+      EConst(CType(monadTypeName))
+      #end
+
     var position : Position = context.currentPos();
     function mk(e : ExprDef) return { pos : position, expr : e };
 
