@@ -1,0 +1,13 @@
+{
+  "name": "monax",
+  "url": "https://github.com/sledorze/monax",
+  "license": "BSD",
+  "tags": ["cross","utility"],
+  "description": "Monax provide a macro to create optimizing Monads and their syntactic sugar",
+  "version": "1.4.0",
+  "releasenote": "Cope with Haxe changes",
+  "contributors": ["sledorze"],
+  "dependencies": {
+
+  }
+}
