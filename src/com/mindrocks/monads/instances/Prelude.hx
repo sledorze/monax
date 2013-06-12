@@ -38,6 +38,27 @@ import com.mindrocks.monads.Monad;
   }
 }
 
+
+@:native("Null_Monad") class NullM {
+
+  macro public static function dO(body : Expr) return
+    Monad._dO("NullM", body, Context);
+
+  public static function monad<T>(o : Null<T>)
+    return OptionM;
+
+  inline public static function ret<T>(x : T) return
+    x;
+
+  inline public static function map < T, U > (o : Null<T>, f : T -> U) : Null<U> {
+    return (o == null) ? null : f(o);
+  }
+
+  inline public static function flatMap<T, U>(o : Null<T>, f : T -> Null<U>) : Null<U> {
+    return (o == null) ? null : f(o);
+  }
+}
+
 @:native("Array_Monad") class ArrayM {
 
   macro public static function dO(body : Expr) return
