@@ -94,6 +94,38 @@ class MonadTest {
       })(function(x) return x);
       
     Assert.areEqual(res4, "52\ndummy-content");
-    
+
+
+    var res5 =
+      NullM.dO({
+        a <= null;
+        b <= 1;
+        return a + b;
+      });
+    Assert.areEqual(res5, null);
+
+    var res6 =
+      NullM.dO({
+        a <= 1;
+        b <= null;
+        return a = b;
+      });
+    Assert.areEqual(res6, null);
+
+    var res7 =
+      NullM.dO({
+        a <= 2;
+        b <= 3;
+        return a + b;
+      });
+    Assert.areEqual(res7, 5);
+
+    var res8 =
+      NullM.dO({
+        a <= 2;
+        b <= a * 7 + 1;
+        return a + b;
+      });
+    Assert.areEqual(res8, 17);
   }
 }
