@@ -12,10 +12,12 @@ h2. Learn the (not so) hard way - Defining a Monad instance.
 <pre>
 <code>
 
+package mypackage;
+
 class OptionM {
     
   @:macro public static function dO(body : Expr) return // the function to trigger the Monad macro.
-    Monad.dO("OptionM", body, Context)
+    Monad.dO("mypackage.OptionM", body, Context)
 
   inline public static function ret<T>(x : T) return // creates an element
     Some(x)
@@ -56,7 +58,7 @@ One can define his own optimisations (feeding the Monad.dO method its last param
 <pre>
 <code>
   @:macro public static function dO(body : Expr) return
-    Monad.dO("OptionM", body, Context, myCustomTransformation)
+    Monad.dO("mypackage.OptionM", body, Context, myCustomTransformation)
 </code>
 </pre>
 
@@ -67,6 +69,6 @@ or using no optimisation at all:
 <pre>
 <code>
   @:macro public static function dO(body : Expr) return
-    Monad.dO("OptionM", body, Context, Monad.noOpt)
+    Monad.dO("mypackage.OptionM", body, Context, Monad.noOpt)
 </code>
 </pre>
