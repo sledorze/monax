@@ -23,10 +23,14 @@ enum MonadOp {
 #end
 }
 
+#if haxe3
+typedef Option<T> = haxe.ds.Option<T>;
+#else
 enum Option<T> {
    None;
    Some(v : T);
 }
+#end
  
 /**
  * Use ret, map and flatMap by convention (map being required when standards optimizations are used).
