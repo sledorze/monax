@@ -4,8 +4,8 @@
   "license": "BSD",
   "tags": ["cross","utility"],
   "description": "Monax provide a macro to create optimizing Monads and their syntactic sugar",
-  "version": "1.4.0",
-  "releasenote": "Cope with Haxe changes",
+  "version": "1.5.0",
+  "releasenote": "NullM instance & includes package names in definitions",
   "contributors": ["sledorze"],
   "dependencies": {
 
