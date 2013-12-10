@@ -15,6 +15,8 @@ h2. Learn the (not so) hard way - Defining a Monad instance.
 package mypackage;
 
 class OptionM {
+
+  public static function monad<T>(o : Option<T>) return OptionM; // will help with syntactic Sugar (see below)
     
   @:macro public static function dO(body : Expr) return // the function to trigger the Monad macro.
     Monad.dO("mypackage.OptionM", body, Context)
