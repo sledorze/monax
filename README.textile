@@ -75,14 +75,11 @@ or using no optimisation at all:
 
 h2. Syntactic Sugar support.
 
-Monax provides some less invasive syntax
-
+Monax provides some leaner invasive syntax
 <pre>
 <code>
         import com.mindrocks.Monad.dO => dO;
-
         ...
-
         dO({
           value <= return 55;
           value1 <= return value * 2;
