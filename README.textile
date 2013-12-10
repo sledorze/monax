@@ -72,3 +72,21 @@ or using no optimisation at all:
     Monad.dO("mypackage.OptionM", body, Context, Monad.noOpt)
 </code>
 </pre>
+
+h2. Syntactic Sugar support.
+
+Monax provides some less invasive syntax
+
+<pre>
+<code>
+        import com.mindrocks.Monad.dO => dO;
+
+        ...
+
+        dO({
+          value <= return 55;
+          value1 <= return value * 2;
+          return value1 + value;
+        });
+</code>
+</pre>
