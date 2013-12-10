@@ -20,6 +20,7 @@ enum MonadOp {
   
   MCall(name : String, params : Array<Expr>);
   MFuncApp(paramName : String, body : MonadOp, app : MonadOp);
+  MIf(cond : Expr, ethen : MonadOp, eelse : MonadOp);
 #end
 }
 
@@ -31,7 +32,7 @@ enum Option<T> {
    Some(v : T);
 }
 #end
- 
+
 /**
  * Use ret, map and flatMap by convention (map being required when standards optimizations are used).
  */
@@ -76,7 +77,7 @@ class Monad {
   #if macro
     function mk(e : ExprDef) return { pos : Context.currentPos(), expr : e };
     switch (exp.expr) {
-      case EBlock(exprs):
+	  case EBlock(exprs):
         switch (exprs[0].expr) {
           case EBinop(op, _, e2):
             if (op == OpLte) {
@@ -146,20 +147,13 @@ class Monad {
               return MCall("ret", [mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end("Monad"))), "dO")), [exp]))]); 
             default:
               return MCall("ret", [exp]);
-          }          
-          
-        case ECall(exp, params) :
-          switch (exp.expr) {
-            case EConst(const):
-              switch (const) {
-                case CIdent(name):          
-                  if (isAValidName(name)) {
-                    return MCall(name, params); // valid; we should issue a monad call then.                    
-                  }
-                default:
-              }
-            default:
           }
+		  
+		case EIf(econd, ethen, eelse):
+			return MIf(econd, tryPromoteExpression(ethen), tryPromoteExpression(eelse));
+        
+        case ECall( { expr : EConst(CIdent(name)), pos : _ }, params) if (isAValidName(name)) :
+			return MCall(name, params); // valid; we should issue a monad call then.                    
         default:
       }
       return MExp(e);
@@ -175,21 +169,9 @@ class Monad {
       }
       
       switch (e.expr) {
-        case EBinop(op, l, rightExpr) :
-          switch (op) {
-            case OpLte:              
-              switch (l.expr) {
-                case EConst(c) :
-                  switch (c) {
-                    case CIdent(name) :
-                      var e = tryPromoteExpression(rightExpr);
-                      return Some(flatMapThis(e, name));
-                    default :
-                  }
-                default :
-              }                  
-            default :
-          }        
+        case EBinop(OpLte, { expr : EConst(CIdent(name)), pos : _ }, rightExpr) :
+			var e = tryPromoteExpression(rightExpr);
+			return Some(flatMapThis(e, name));
         default:
       }      
       return Some(flatMapThis(tryPromoteExpression(e), "_"));
@@ -217,6 +199,9 @@ class Monad {
           var body = mk(EReturn(toExpr(body)));
           var func = mk(EFunction(null, { args : [ { name : paramName, type : null, opt : false, value : null } ], ret : null, expr : body, params : [] } ));
           return mk(ECall(func, [toExpr(app)]));
+		  
+		case MIf(econd, ethen, eelse):
+		  return mk(EIf(econd, toExpr(ethen), toExpr(eelse)));
       }
     }
     
