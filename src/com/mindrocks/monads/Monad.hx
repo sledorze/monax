@@ -158,7 +158,36 @@ class Monad {
       }
       return MExp(e);
     }
-    
+
+    // fix operator precedence such as in
+    // a <= "abc" == "abc" ? b : c
+    // there might be more cases
+    function findOpLte(e:Expr):{e:Expr, ?name:String}{
+      function mk(e2 : ExprDef) return { pos : e.pos, expr : e2 };
+      switch (e.expr) {
+        case EBinop(OpLte, { expr : EConst(CIdent(name)), pos : _ }, rightExpr) :
+          return { name: name, e: rightExpr };
+        case EBinop(op, leftExpr, rightExpr) :
+          var x = findOpLte(leftExpr);
+          if (x.name != null){
+            return {
+              name: x.name,
+              e: mk(EBinop(op, x.e, rightExpr))
+            }
+          }
+	case ETernary( econd , eif , eelse ):
+          var x = findOpLte(econd);
+          if (x.name != null){
+            return {
+              name: x.name,
+              e: mk(ETernary(x.e, eif, eelse)),
+            }
+          }
+        default:
+      }
+      return {e: e};
+    }
+
     function transform(e : Expr, nextOpt : Option<MonadOp>) : Option<MonadOp> {
 
       function flatMapThis(e : MonadOp, name : String) {
@@ -167,14 +196,14 @@ class Monad {
           case None : return e;
         }
       }
-      
-      switch (e.expr) {
-        case EBinop(OpLte, { expr : EConst(CIdent(name)), pos : _ }, rightExpr) :
-			var e = tryPromoteExpression(rightExpr);
-			return Some(flatMapThis(e, name));
-        default:
-      }      
-      return Some(flatMapThis(tryPromoteExpression(e), "_"));
+
+      var x = findOpLte(e);
+      if (x.name == null){
+        return Some(flatMapThis(tryPromoteExpression(e), "_"));
+      } else {
+        var e = tryPromoteExpression(x.e);
+        return Some(flatMapThis(e, x.name));
+      }
     }
 
     function toExpr(m : MonadOp) : Expr {
