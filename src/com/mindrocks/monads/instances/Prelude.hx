@@ -31,9 +31,9 @@ import com.mindrocks.monads.Monad;
   }
 
   inline public static function flatMap<T, U>(o : Option<T>, f : T -> Option<U>) : Option<U> {
-    switch (o) {
-      case Some(x) : return f(x);
-      default : return None;
+    return switch (o) {
+      case Some(x) : f(x);
+      default : None;
     }
   }
 }
