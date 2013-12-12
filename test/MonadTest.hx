@@ -19,7 +19,7 @@ class MonadTest {
 
   public function new() {
   }
-  
+
   public static function main() {
     new MonadTest().compilationTest();
     new NodeJsMonadTest().compilationTest();
@@ -27,34 +27,34 @@ class MonadTest {
 
   @Test
   public function compilationTest() {
-    
+
     var res =
       Monad.dO({
         value <= Some(55);
         value1 <= return value * 2;
         return value1 + value;
       });
-    
+
     var nested =
       Monad.dO({
-        v <= Some([10, 20]);        
+        v <= Some([10, 20]);
         w <= return {
           x <= v;
           return x + 2;
         };
         return w;
       });
-      
+
       trace("Nested " + nested);
-      
+
     Assert.isTrue(
       switch (res) {
         case None: false;
         case Some(x): x == 165;
       }
     );
-   
-    var res2 = 
+
+    var res2 =
       Monad.dO({
         a <= [0, 1, 2];
         b <= [10, 20, 30];
@@ -63,7 +63,7 @@ class MonadTest {
       });
 
     var expected = [1010, 1020, 1030, 1011, 1021, 1031, 1012, 1022, 1032];
-    var equals = res2.length == expected.length;    
+    var equals = res2.length == expected.length;
     if (equals) {
       for (i in 0...res2.length) {
         equals = equals && (res2[i] == expected[i]);
@@ -80,19 +80,19 @@ class MonadTest {
       }).runState("1");
 
     Assert.areEqual(res3, "passed state: 1 new state: 2");
-    
+
     var dummyReadFile:RC<String,String> = function(cont)  {
       var fileContents = "dummy-content";
       return cont(fileContents);
     }
-    
+
     var res4 =
       ContM.dO({
         headline <= return 52;
         filecontents <= dummyReadFile;
         return Std.string(headline) + "\n" + filecontents;
       })(function(x) return x);
-      
+
     Assert.areEqual(res4, "52\ndummy-content");
 
 
@@ -127,5 +127,15 @@ class MonadTest {
         return a + b;
       });
     Assert.areEqual(res8, 17);
+
+
+    // operator precedence test
+    var res9 =
+      NullM.dO({
+        a <= "2";
+        b <= a == "2" ? return "2" : return "3";
+        return b;
+      });
+    Assert.areEqual(res9, "2");
   }
 }
