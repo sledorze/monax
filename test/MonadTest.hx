@@ -128,14 +128,12 @@ class MonadTest {
     Assert.areEqual(res8, 17);
 
     // operator precedence test
-/*    
     var res9 =
       NullM.dO({
-        a <= "2";
+        a <= return "2";
         b <= a == "2" ? return "2" : return "3";
         return b;
       });
     Assert.areEqual(res9, "2");
-*/
   }
 }

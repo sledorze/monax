@@ -80,23 +80,27 @@ class Monad {
     switch (exp.expr) {
       case EBlock(exprs):
         switch (exprs[0].expr) {
-          case EBinop(op, _, e2):
-            if (op == OpLte) {
+          case EBinop(OpLte, _, e2):
 
-              var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
-              var monadType = Context.typeof(retrieveMonad);
+            switch (e2.expr) {
+              case EReturn(_):
+                Context.error("First value use 'return'.  Monad type need to be explicitely specified.", exprs[0].pos);
+              case _:
+                var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
+                var monadType = Context.typeof(retrieveMonad);
+                
+                switch (monadType) {
+                  case TType(defRef, params) :
+                    var monadName = (defRef.get().name).split("#")[1]; // not very nice
+                    return mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end(monadName))), "dO")), [exp]));
+
+                  case _ :
+                    Context.error('type $monadType has no Monad ', exprs[0].pos);
+                    return null;
+                }
               
-              switch (monadType) {
-                case TType( defRef, params) :
-                  var monadName = (defRef.get().name).split("#")[1]; // not very
-                  return mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end(monadName))), "dO")), [exp]));
-
-                case _ :
-                  Context.error( "This value is not a monad", exprs[0].pos);
-                  return null;
-              }
-
             }
+
           default:
         }
 
@@ -183,12 +187,12 @@ class Monad {
               e: mk(EBinop(op, x.e, rightExpr))
             }
           }
-        case ETernary( econd , eif , eelse ):
+        case ETernary(econd, eif, eelse):
           var x = findOpLte(econd);
           if (x.name != null){
             return {
               name: x.name,
-              e: mk(ETernary(x.e, eif, eelse)),
+              e: mk(EIf(x.e, eif, eelse)),
             };
           }
         default:
