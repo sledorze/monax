@@ -80,9 +80,9 @@ h2. Syntactic Sugar support.
 Monax provides some leaner syntax:
 <pre>
 <code>
-        import com.mindrocks.monads.Monad.dO in dO;
+        import com.mindrocks.monads.Monad.dO in Do;
         ...
-        dO({
+        Do({
           value <= [55];
           value1 <= return value * 2;
           return value1 + value;
