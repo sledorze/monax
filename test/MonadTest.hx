@@ -13,6 +13,8 @@ using com.mindrocks.monads.Monad;
 
 import massive.munit.Assert;
 
+import com.mindrocks.monads.Monad.dO in Do;
+
 
 class MonadTest {
 
@@ -44,12 +46,10 @@ class MonadTest {
         return w;
       });
 
-      trace("Nested " + nested);
-
     Assert.isTrue(
       switch (res) {
-        case None: false;
-        case Some(x): x == 165;
+        case Some(165): true;
+        case _: false;
       }
     );
 
@@ -135,5 +135,15 @@ class MonadTest {
         return b;
       });
     Assert.areEqual(res9, "2");
+
+    var res10 = 
+      Do({
+        value <= [55];
+        value1 <= return value * 2;
+        return value1 + value;
+      });
+
+    Assert.areSame(res10.toString(), [165].toString());
+
   }
 }
