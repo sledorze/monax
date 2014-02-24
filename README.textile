@@ -83,7 +83,7 @@ Monax provides some leaner syntax:
         import com.mindrocks.monads.Monad.dO in dO;
         ...
         dO({
-          value <= return 55;
+          value <= [55];
           value1 <= return value * 2;
           return value1 + value;
         });
