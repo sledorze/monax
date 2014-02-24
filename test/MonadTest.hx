@@ -12,7 +12,6 @@ import com.mindrocks.monads.Monad;
 using com.mindrocks.monads.Monad;
 
 import massive.munit.Assert;
-// import com.mindrocks.macros.Monad; // just for imorting an definition Option
 
 
 class MonadTest {
@@ -128,8 +127,8 @@ class MonadTest {
       });
     Assert.areEqual(res8, 17);
 
-
     // operator precedence test
+/*    
     var res9 =
       NullM.dO({
         a <= "2";
@@ -137,5 +136,6 @@ class MonadTest {
         return b;
       });
     Assert.areEqual(res9, "2");
+*/
   }
 }

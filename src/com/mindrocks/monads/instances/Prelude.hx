@@ -44,8 +44,7 @@ import com.mindrocks.monads.Monad;
   macro public static function dO(body : Expr) return
     Monad._dO("NullM", body, Context);
 
-  public static function monad<T>(o : Null<T>)
-    return OptionM;
+//  public static function monad<T>(o : Null<T>) Cannot define this shortcut as it unifies with too much values
 
   inline public static function ret<T>(x : T) return
     x;

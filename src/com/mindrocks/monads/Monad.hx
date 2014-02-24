@@ -2,6 +2,7 @@ package com.mindrocks.monads;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Type;
 // import haxe.macro.Type;
 
 /**
@@ -84,10 +85,17 @@ class Monad {
 
               var retrieveMonad = mk(ECall(mk(EField(e2, "monad")), []));
               var monadType = Context.typeof(retrieveMonad);
-              var monadName = (Std.string(monadType)).split("#")[1].split(",")[0]; // not very
+              
+              switch (monadType) {
+                case TType( defRef, params) :
+                  var monadName = (defRef.get().name).split("#")[1]; // not very
+                  return mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end(monadName))), "dO")), [exp]));
 
+                case _ :
+                  Context.error( "This value is not a monad", exprs[0].pos);
+                  return null;
+              }
 
-              return mk(ECall(mk(EField(mk(EConst(#if haxe3 CIdent #else CType #end(monadName))), "dO")), [exp]));
             }
           default:
         }
@@ -112,8 +120,8 @@ class Monad {
         return b != null ? {expr:EField(b, a), pos:b.pos} : macro $i{a};
       }, null).expr;
       #else
-      EConst(CType(monadTypeName))
-      #end
+      EConst(CType(monadTypeName));
+      #end      
 
     var position : Position = context.currentPos();
     function mk(e : ExprDef) return { pos : position, expr : e };
@@ -175,13 +183,13 @@ class Monad {
               e: mk(EBinop(op, x.e, rightExpr))
             }
           }
-	case ETernary( econd , eif , eelse ):
+        case ETernary( econd , eif , eelse ):
           var x = findOpLte(econd);
           if (x.name != null){
             return {
               name: x.name,
               e: mk(ETernary(x.e, eif, eelse)),
-            }
+            };
           }
         default:
       }
