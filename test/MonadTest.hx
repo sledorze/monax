@@ -12,13 +12,16 @@ import com.mindrocks.monads.Monad;
 using com.mindrocks.monads.Monad;
 
 import massive.munit.Assert;
+import org.hamcrest.MatchersBase;
+import org.hamcrest.Matcher;
 
 import com.mindrocks.monads.Monad.dO in Do;
 
 
-class MonadTest {
+class MonadTest extends MatchersBase {
 
   public function new() {
+    super();
   }
 
   public static function main() {
@@ -143,7 +146,6 @@ class MonadTest {
         return value1 + value;
       });
 
-    Assert.areSame(res10.toString(), [165].toString());
-
+      assertThat(res10, equalTo([165]));
   }
 }
