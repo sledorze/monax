@@ -4,8 +4,8 @@
   "license": "BSD",
   "tags": ["cross","utility"],
   "description": "Monax provide a macro to create optimizing Monads and their syntactic sugar",
-  "version": "1.5.0",
-  "releasenote": "NullM instance & includes package names in definitions",
+  "version": "1.5.1",
+  "releasenote": "Fix support for ternary operator. Better error messages.",
   "contributors": ["sledorze"],
   "dependencies": {
 
