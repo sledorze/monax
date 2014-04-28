@@ -1,6 +1,6 @@
 h1. Monax macro library.
 
-This library, built on top of haXe macros give the user the possibility to define specific Monad instance and get automatically access to a haskell like sugared syntax.
+This library, built on top of Haxe macros give the user the possibility to define specific Monad instance and get automatically access to a haskell like sugared syntax.
 About monad: http://en.wikipedia.org/wiki/Monad_(functional_programming)#Background
 
 The syntactic sugar rely on the existence 'ret' and 'flatMap' in the Monad instance.
